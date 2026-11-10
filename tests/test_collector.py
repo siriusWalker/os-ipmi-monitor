@@ -3,6 +3,7 @@ import unittest
 import pathlib
 import sys
 import tempfile
+from xml.etree import ElementTree
 from unittest.mock import patch
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'src/opnsense/scripts/ipmimon'))
 import collector
@@ -141,6 +142,22 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(data['inventory']['system']['name'], 'Super Server')
         self.assertEqual(data['inventory']['profile']['id'], 'supermicro-a2sdi-tp8f')
         self.assertIn('DIMM*', data['inventory']['profile']['sensor_patterns'])
+        modes = data['inventory']['profile']['fan_modes']
+        self.assertEqual([(mode['id'], mode['code']) for mode in modes], [
+            ('standard', '00'), ('full', '01'), ('optimal', '02'), ('pue2', '03'), ('heavyio', '04')])
+        self.assertTrue(all(isinstance(mode['name'], str) and mode['name'] for mode in modes))
+
+    def test_fan_mode_label_comes_from_board_profile(self):
+        tree = ElementTree.parse(collector.PROVIDER.PROFILES_PATH)
+        mode = tree.find("./board[@id='supermicro-a2sdi-tp8f']/fan-modes/mode[@id='pue2']")
+        self.assertIsNotNone(mode)
+        mode.set('name', 'Custom PUE2 label')
+        with tempfile.TemporaryDirectory() as folder:
+            profile_path = pathlib.Path(folder) / 'boards.xml'
+            tree.write(profile_path, encoding='utf-8', xml_declaration=True)
+            profile = collector.PROVIDER.board_profile([], {}, path=profile_path, motherboard='A2SDi-TP8F')
+        self.assertEqual(next(item['name'] for item in profile['fan_modes'] if item['id'] == 'pue2'),
+                         'Custom PUE2 label')
 
     def test_smbios_model_selects_profile_when_fru_is_incomplete(self):
         data = collector.collect_inventory(lambda key: ({
@@ -181,6 +198,24 @@ class CollectorTests(unittest.TestCase):
         self.assertIsNone(collector.PROVIDER.board_profile([], {}, motherboard='A2SDi-8C-HLN4F'))
         self.assertIsNone(collector.PROVIDER.board_profile([], {}, motherboard='X11SDV-12C-TP8F'))
         self.assertIsNone(collector.PROVIDER.board_profile([], {}, motherboard='X12SDV-10C-SPT8F'))
+
+    def test_documented_modes_are_scoped_to_each_board(self):
+        expected = {
+            'A2SDi-4C-HLN4F': {'standard', 'full', 'optimal'},
+            'A2SDi-8C+-HLN4F': {'standard', 'full', 'optimal'},
+            'A2SDi-TP8F': {'standard', 'full', 'optimal', 'pue2', 'heavyio'},
+            'X10SDV-8C-TLN4F': {'standard', 'full', 'optimal'},
+            'X10SDV-7TP4F': {'standard', 'full', 'optimal', 'heavyio'},
+            'X10SDV-16C-TLN4F': {'standard', 'full', 'optimal', 'heavyio'},
+            'X11SDV-4C-TP8F': {'standard', 'full'},
+            'X11SDV-8C-TP8F': {'standard', 'full'},
+            'X12SDV-4C-SPT8F': {'standard', 'full', 'optimal'},
+            'X12SDV-8C-SPT4F': {'standard', 'full', 'optimal'},
+        }
+        for board, ids in expected.items():
+            with self.subTest(board=board):
+                profile = collector.PROVIDER.board_profile([], {}, motherboard=board)
+                self.assertEqual({mode['id'] for mode in profile['fan_modes']}, ids)
 
     def test_documented_supermicro_fan_zones(self):
         expected = {

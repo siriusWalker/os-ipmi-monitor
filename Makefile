@@ -1,6 +1,6 @@
 PLUGIN_NAME=           ipmi-monitor
 PLUGIN_VERSION=        1.0.0
-PLUGIN_COMMENT=        Read-only IPMI dashboard monitoring
+PLUGIN_COMMENT=        IPMI monitoring with optional fan mode control
 PLUGIN_DEPENDS=        ipmitool
 
 .if !defined(PLUGIN_MAINTAINER) || !defined(PLUGIN_WWW) || !defined(PLUGIN_LICENSE)

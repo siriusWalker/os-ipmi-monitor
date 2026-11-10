@@ -2,13 +2,23 @@
 <board-profiles>
     <!-- Match any listed FRU/BMC identity. Patterns are case insensitive; * is allowed only at the end. -->
     <!-- These suggestions never restrict the live SDR sensor enumeration. -->
+    <!-- Supermicro documents IPMICFG mode numbers 0/1/2 (FAQ 35599), but does not
+         confirm the OEM raw command on every board here. Lists vary by system
+         (Super BMC IPMI User's Guide, section 2-7-15). The raw command has been
+         physically validated only on A2SDi-TP8F. -->
     <!-- A2SDi HLN4F variants: four DIMM slots and four fan headers; no assumed fan-zone wiring. -->
+    <!-- UNTESTED: A2SDi-4C-HLN4F; profile based on manufacturer documentation. -->
     <board id="supermicro-a2sdi-4c-hln4f">
         <match source="fru.board.product" pattern="A2SDi-4C-HLN4F" />
         <match source="fru.board.product" pattern="MBD-A2SDi-4C-HLN4F" />
         <match source="fru.product.name" pattern="A2SDi-4C-HLN4F" />
         <match source="smbios.planar.product" pattern="A2SDi-4C-HLN4F" />
         <match source="smbios.planar.product" pattern="MBD-A2SDi-4C-HLN4F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+            <mode id="optimal" code="02" name="Optimal" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -25,12 +35,18 @@
             </group>
         </groups>
     </board>
+    <!-- UNTESTED: A2SDi-8C+-HLN4F; profile based on manufacturer documentation. -->
     <board id="supermicro-a2sdi-8cplus-hln4f">
         <match source="fru.board.product" pattern="A2SDi-8C+-HLN4F" />
         <match source="fru.board.product" pattern="MBD-A2SDi-8C+-HLN4F" />
         <match source="fru.product.name" pattern="A2SDi-8C+-HLN4F" />
         <match source="smbios.planar.product" pattern="A2SDi-8C+-HLN4F" />
         <match source="smbios.planar.product" pattern="MBD-A2SDi-8C+-HLN4F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+            <mode id="optimal" code="02" name="Optimal" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -48,11 +64,19 @@
         </groups>
     </board>
     <!-- A2SDi TP8F variants: four DIMM slots and four fan headers; no assumed fan-zone wiring. -->
+    <!-- TESTED: A2SDi-TP8F; IPMI reads and fan-mode writes on the OPNsense test firewall. -->
     <board id="supermicro-a2sdi-tp8f">
         <match source="fru.board.product" pattern="A2SDi-TP8F" />
         <match source="fru.product.name" pattern="A2SDi-TP8F" />
         <match source="bmc.product_name" pattern="A2SDi-TP8F" />
         <match source="smbios.planar.product" pattern="A2SDi-TP8F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+            <mode id="optimal" code="02" name="Optimal" />
+            <mode id="pue2" code="03" name="PUE2" />
+            <mode id="heavyio" code="04" name="HeavyIO" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -78,12 +102,18 @@
     </board>
     <!-- X10SDV Mini-ITX: MNL-1726, p. 2-20. PCB 2.00 uses FAN4 as zone 2,
          reported as FANA by IPMI; PCB 1.00 has only the first zone. -->
+    <!-- UNTESTED: X10SDV-8C-TLN4F; profile based on manufacturer documentation. -->
     <board id="supermicro-x10sdv-8c-tln4f">
         <match source="fru.board.product" pattern="X10SDV-8C-TLN4F" />
         <match source="fru.board.product" pattern="MBD-X10SDV-8C-TLN4F" />
         <match source="fru.product.name" pattern="X10SDV-8C-TLN4F" />
         <match source="smbios.planar.product" pattern="X10SDV-8C-TLN4F" />
         <match source="smbios.planar.product" pattern="MBD-X10SDV-8C-TLN4F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+            <mode id="optimal" code="02" name="Optimal" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -108,12 +138,21 @@
             </group>
         </groups>
     </board>
-    <!-- More embedded Xeon D boards. Only live SDR readings become initial choices. -->
+    <!-- More embedded Xeon D boards. Only live SDR readings become initial choices.
+         X10 HeavyIO is limited to documented dual-zone designs (Supermicro FAQ 16758).
+         Its raw code 04 is inferred from the tested A2SDi-TP8F, not documented for X10. -->
+    <!-- UNTESTED: X10SDV-7TP4F; profile based on manufacturer documentation. -->
     <board id="supermicro-x10sdv-7tp4f">
         <match source="fru.board.product" pattern="X10SDV-7TP4F" />
         <match source="fru.board.product" pattern="MBD-X10SDV-7TP4F" />
         <match source="smbios.planar.product" pattern="X10SDV-7TP4F" />
         <match source="smbios.planar.product" pattern="MBD-X10SDV-7TP4F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+            <mode id="optimal" code="02" name="Optimal" />
+            <mode id="heavyio" code="04" name="HeavyIO" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -134,11 +173,18 @@
             </group>
         </groups>
     </board>
+    <!-- UNTESTED: X10SDV-16C-TLN4F; profile based on manufacturer documentation. -->
     <board id="supermicro-x10sdv-16c-tln4f">
         <match source="fru.board.product" pattern="X10SDV-16C-TLN4F" />
         <match source="fru.board.product" pattern="MBD-X10SDV-16C-TLN4F" />
         <match source="smbios.planar.product" pattern="X10SDV-16C-TLN4F" />
         <match source="smbios.planar.product" pattern="MBD-X10SDV-16C-TLN4F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+            <mode id="optimal" code="02" name="Optimal" />
+            <mode id="heavyio" code="04" name="HeavyIO" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -166,12 +212,18 @@
             </group>
         </groups>
     </board>
-    <!-- X11SDV-TP8F: MNL-2007, p. 38: zone 1 = FAN1-4, zone 2 = FANA/B. -->
+    <!-- X11SDV-TP8F: MNL-2007, p. 38: zone 1 = FAN1-4, zone 2 = FANA/B.
+         The manual lists Quiet but does not specify its OEM code, so it is excluded. -->
+    <!-- UNTESTED: X11SDV-4C-TP8F; profile based on manufacturer documentation. -->
     <board id="supermicro-x11sdv-4c-tp8f">
         <match source="fru.board.product" pattern="X11SDV-4C-TP8F" />
         <match source="fru.board.product" pattern="MBD-X11SDV-4C-TP8F" />
         <match source="smbios.planar.product" pattern="X11SDV-4C-TP8F" />
         <match source="smbios.planar.product" pattern="MBD-X11SDV-4C-TP8F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -202,11 +254,16 @@
             </group>
         </groups>
     </board>
+    <!-- UNTESTED: X11SDV-8C-TP8F; profile based on manufacturer documentation. -->
     <board id="supermicro-x11sdv-8c-tp8f">
         <match source="fru.board.product" pattern="X11SDV-8C-TP8F" />
         <match source="fru.board.product" pattern="MBD-X11SDV-8C-TP8F" />
         <match source="smbios.planar.product" pattern="X11SDV-8C-TP8F" />
         <match source="smbios.planar.product" pattern="MBD-X11SDV-8C-TP8F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -237,11 +294,17 @@
             </group>
         </groups>
     </board>
+    <!-- UNTESTED: X12SDV-4C-SPT8F; profile based on manufacturer documentation. -->
     <board id="supermicro-x12sdv-4c-spt8f">
         <match source="fru.board.product" pattern="X12SDV-4C-SPT8F" />
         <match source="fru.board.product" pattern="MBD-X12SDV-4C-SPT8F" />
         <match source="smbios.planar.product" pattern="X12SDV-4C-SPT8F" />
         <match source="smbios.planar.product" pattern="MBD-X12SDV-4C-SPT8F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+            <mode id="optimal" code="02" name="Optimal" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />
@@ -262,11 +325,17 @@
             </group>
         </groups>
     </board>
+    <!-- UNTESTED: X12SDV-8C-SPT4F; profile based on manufacturer documentation. -->
     <board id="supermicro-x12sdv-8c-spt4f">
         <match source="fru.board.product" pattern="X12SDV-8C-SPT4F" />
         <match source="fru.board.product" pattern="MBD-X12SDV-8C-SPT4F" />
         <match source="smbios.planar.product" pattern="X12SDV-8C-SPT4F" />
         <match source="smbios.planar.product" pattern="MBD-X12SDV-8C-SPT4F" />
+        <fan-modes>
+            <mode id="standard" code="00" name="Standard" />
+            <mode id="full" code="01" name="Full Speed" />
+            <mode id="optimal" code="02" name="Optimal" />
+        </fan-modes>
         <sensors>
             <sensor pattern="CPU Temp" />
             <sensor pattern="System Temp" />

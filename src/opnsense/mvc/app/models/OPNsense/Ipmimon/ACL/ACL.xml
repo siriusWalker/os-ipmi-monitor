@@ -6,4 +6,10 @@
             <pattern>api/ipmimon/snapshot/inventory</pattern>
         </patterns>
     </page-ipmimon-readonly>
+    <page-ipmimon-fan-control>
+        <name>Diagnostics: IPMI fan control</name>
+        <patterns>
+            <pattern>api/ipmimon/fan/set</pattern>
+        </patterns>
+    </page-ipmimon-fan-control>
 </acl>

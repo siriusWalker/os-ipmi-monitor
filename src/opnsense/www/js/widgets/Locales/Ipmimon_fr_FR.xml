@@ -72,6 +72,11 @@
     <command_unavailable>commande indisponible</command_unavailable>
     <timed_out>délai dépassé</timed_out>
     <fan_mode>Mode Ventilation</fan_mode>
+    <apply_fan_mode>Appliquer</apply_fan_mode>
+    <cancel_fan_mode>Annuler</cancel_fan_mode>
+    <confirm_fan_mode_change>Passer le mode de ventilation à</confirm_fan_mode_change>
+    <changing_fan_mode>Changement du mode de ventilation…</changing_fan_mode>
+    <fan_mode_change_failed>Impossible de changer le mode. Vérifiez vos droits et la prise en charge par le BMC.</fan_mode_change_failed>
     <ipmi_access_unavailable>accès IPMI indisponible</ipmi_access_unavailable>
     <hardware>Matériel</hardware>
     <system>Système</system>

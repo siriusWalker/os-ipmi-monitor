@@ -1,4 +1,5 @@
-IPMI Monitor adds a read-only hardware monitoring dashboard widget to OPNsense.
+IPMI Monitor adds a hardware monitoring dashboard widget to OPNsense.
 It discovers temperatures, fans, voltages and other SDR sensors, supports custom
 labels and calculated groups, and reads Supermicro fan mode and PWM zones.
-All IPMI requests use the local open interface and fixed read-only commands.
+Monitoring uses the local open interface and fixed read-only commands. An
+authorized user can explicitly change the fan mode on a supported board.

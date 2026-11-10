@@ -54,6 +54,7 @@ def main():
     subprocess.run(['pkg', 'info', '-e', 'ipmitool'], check=True)
     subprocess.run([sys.executable, '-B', '-m', 'unittest', 'discover', '-s', str(ROOT / 'tests'), '-p', 'test_*.py'], check=True)
     subprocess.run(['/usr/local/bin/php', '-l', str(ROOT / 'src/opnsense/mvc/app/controllers/OPNsense/Ipmimon/Api/SnapshotController.php')], check=True)
+    subprocess.run(['/usr/local/bin/php', '-l', str(ROOT / 'src/opnsense/mvc/app/controllers/OPNsense/Ipmimon/Api/FanController.php')], check=True)
     target = stage_plugin(args.plugins_tree)
     output = ROOT / 'dist/packages'
     output.mkdir(parents=True, exist_ok=True)

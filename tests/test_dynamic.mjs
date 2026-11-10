@@ -15,6 +15,11 @@ globalThis.DOMParser = class {
     }
 };
 const source = await readFile(new URL('../src/opnsense/www/js/widgets/Ipmimon.js',import.meta.url),'utf8');
+const boards = await readFile(new URL('../src/opnsense/scripts/ipmimon/providers/supermicro_boards.xml',import.meta.url),'utf8');
+const board = boards.match(/<board id="supermicro-a2sdi-tp8f">([\s\S]*?)<\/board>/)?.[1];
+assert(board);
+const fanModes = [...board.matchAll(/<mode id="([^"]+)" code="([^"]+)" name="([^"]+)"\s*\/>/g)]
+    .map(([,id,code,name]) => ({id,code,name}));
 const {default:Widget} = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
 const widget = new Widget({});
 widget.latest = {rows:[
@@ -38,6 +43,7 @@ widget.ajaxCall = async path => {
         profile:{
         id:'supermicro-a2sdi-tp8f',
         sensor_patterns:['CPU Temp','System Temp','FAN*','DIMM*','Fan Mode','PWM zone *'],
+        fan_modes:fanModes,
         groups:[
             {id:'group_fan0',name:'FAN Zone 0',category:'Fans',unit:'RPM',method:'mean',members:['FAN1','FAN2']},
             {id:'group_fan1',name:'FAN Zone 1',category:'Fans',unit:'RPM',method:'mean',members:['FANA']},
@@ -114,6 +120,8 @@ assert.equal(widget.defaultLabel('DIMMA1 Temp'),'DIMMA1 Temp');
 assert.equal(widget.tr('sensors'),'Capteurs');
 assert.equal(widget.tr('hardware'),'Matériel');
 assert.equal(widget.tr('refresh_interval'),'Intervalle d’actualisation');
+assert.deepEqual(widget.fanModeChoices().map(mode=>mode.value),['standard','full','optimal','pue2','heavyio']);
+assert.equal(widget.fanModeChoices()[3].label,fanModes[3].name);
 globalThis.document.documentElement.lang='en';
 const english=new Widget({});
 await english.loadLocale();
@@ -125,7 +133,7 @@ assert.equal(english.tr('category_control'),'Fan control');
 assert.equal(english.backendMessage('sensors: command_unavailable'),'sensors: command unavailable');
 assert.equal(widget.defaultLabel('Fan Mode'),'Mode Ventilation');
 assert.equal(english.defaultLabel('Fan Mode'),'Fan Mode');
-assert.equal(widget.formatValue({name:'Fan Mode',value:'0x03 (observed)'}),'PUE2');
+assert.equal(widget.formatValue({name:'Fan Mode',value:'0x03'}),fanModes[3].name);
 const scheduler = new Widget({widget:{refresh_interval:'30'}});
 assert.equal(scheduler.tickTimeout,1);
 scheduler.settings={refresh_interval:'30'};
@@ -192,6 +200,7 @@ generic.ajaxCall=async()=>({inventory:{profile:null}});
 const genericOptions=await generic.getWidgetOptions();
 assert.deepEqual(genericOptions.sensor_choices.default,[generic.sensorId('Vendor X Sensor')]);
 assert.deepEqual(JSON.parse(genericOptions.groups_json.default),[]);
+assert.equal(generic.formatValue({name:'Fan Mode',value:'0x03'}),'0x03');
 const header = {textContent:'IPMI Monitor'};
 const option = {textContent:'IPMI Monitor',parentElement:{}};
 const selectData = new Map([['selectpicker',true]]);

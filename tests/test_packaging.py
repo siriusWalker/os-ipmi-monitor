@@ -19,6 +19,8 @@ class PackagingTests(unittest.TestCase):
             'opnsense/scripts/ipmimon/providers/__init__.py',
             'opnsense/scripts/ipmimon/providers/supermicro.py',
             'opnsense/scripts/ipmimon/providers/supermicro_boards.xml',
+            'opnsense/scripts/ipmimon/fan_control.py',
+            'opnsense/mvc/app/controllers/OPNsense/Ipmimon/Api/FanController.php',
             'opnsense/www/js/widgets/Locales/Ipmimon_en_US.xml',
             'opnsense/www/js/widgets/Locales/Ipmimon_fr_FR.xml',
         }
@@ -36,6 +38,17 @@ class PackagingTests(unittest.TestCase):
         self.assertIn('<pattern>' + route + '</pattern>', acl)
         self.assertIn('<endpoint>/' + route + '</endpoint>', metadata)
         self.assertIn('[inventory]\ncommand:/usr/local/bin/python3 /usr/local/opnsense/scripts/ipmimon/collector.py inventory\nparameters:', actions)
+
+    def test_fan_control_has_separate_write_acl(self):
+        route = 'api/ipmimon/fan/set'
+        acl = (ROOT / 'src/opnsense/mvc/app/models/OPNsense/Ipmimon/ACL/ACL.xml').read_text()
+        metadata = (ROOT / 'src/opnsense/www/js/widgets/Metadata/Ipmimon.xml').read_text()
+        actions = (ROOT / 'src/opnsense/service/conf/actions.d/actions_ipmimon.conf').read_text()
+        controller = (ROOT / 'src/opnsense/mvc/app/controllers/OPNsense/Ipmimon/Api/FanController.php').read_text()
+        self.assertIn('<pattern>' + route + '</pattern>', acl)
+        self.assertNotIn('<endpoint>/' + route + '</endpoint>', metadata)
+        self.assertIn('[fan_mode.set]\ncommand:/usr/local/bin/python3 /usr/local/opnsense/scripts/ipmimon/fan_control.py', actions)
+        self.assertIn("configdRun('ipmimon fan_mode set ' . $mode)", controller)
 
     def test_native_staging_no_overwrite(self):
         with tempfile.TemporaryDirectory() as folder:

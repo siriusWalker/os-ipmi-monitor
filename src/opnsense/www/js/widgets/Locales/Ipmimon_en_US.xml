@@ -72,6 +72,11 @@
     <command_unavailable>command unavailable</command_unavailable>
     <timed_out>timed out</timed_out>
     <fan_mode>Fan Mode</fan_mode>
+    <apply_fan_mode>Apply</apply_fan_mode>
+    <cancel_fan_mode>Cancel</cancel_fan_mode>
+    <confirm_fan_mode_change>Change fan mode to</confirm_fan_mode_change>
+    <changing_fan_mode>Changing fan mode…</changing_fan_mode>
+    <fan_mode_change_failed>Could not change fan mode. Check your permission and BMC support.</fan_mode_change_failed>
     <ipmi_access_unavailable>IPMI access unavailable</ipmi_access_unavailable>
     <hardware>Hardware</hardware>
     <system>System</system>

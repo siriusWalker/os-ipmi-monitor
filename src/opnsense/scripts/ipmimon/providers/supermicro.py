@@ -158,7 +158,20 @@ def board_profile(devices, bmc, path=PROFILES_PATH, motherboard=None):
                                'category': group.get('category'), 'unit': group.get('unit'),
                                'method': group.get('method'), 'members': members[:256]})
                 group_ids.add(group.get('id'))
-        return {'id': board.get('id'), 'sensor_patterns': sensor_patterns[:256], 'groups': groups[:32]}
+        fan_modes = []
+        mode_ids = set()
+        mode_codes = set()
+        for mode in board.findall('./fan-modes/mode'):
+            mode_id, code, name = mode.get('id'), mode.get('code'), mode.get('name')
+            if (re.fullmatch(r'[a-z][a-z0-9_]{0,31}', mode_id or '') and
+                    re.fullmatch(r'0[0-4]', code or '') and
+                    name and len(name) <= 80 and all(ord(character) >= 32 for character in name) and
+                    mode_id not in mode_ids and code not in mode_codes):
+                fan_modes.append({'id': mode_id, 'code': code, 'name': name})
+                mode_ids.add(mode_id)
+                mode_codes.add(code)
+        return {'id': board.get('id'), 'sensor_patterns': sensor_patterns[:256],
+                'groups': groups[:32], 'fan_modes': fan_modes[:8]}
     return None
 
 
@@ -185,9 +198,7 @@ def parse_byte(output, maximum=255):
 
 def readings(results):
     mode = parse_byte(results['mode'])
-    # On this installation, mode 0x03 is treated as PUE2; the mapping is not universal.
-    label = {0: 'Standard', 1: 'FullSpeed', 2: 'Optimal', 3: 'PUE2', 4: 'HeavyIO'}.get(mode, 'Unknown')
-    mode_text = None if mode is None else '0x%02X (%s)' % (mode, label)
+    mode_text = None if mode is None else '0x%02X' % mode
     rows = [{
         'name': 'Fan Mode', 'value': mode_text, 'unit': '',
         'status': 'na' if mode is None else 'ok',

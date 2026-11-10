@@ -10,11 +10,13 @@ for required in \
 done
 for target in \
     opnsense/scripts/ipmimon/collector.py \
+    opnsense/scripts/ipmimon/fan_control.py \
     opnsense/scripts/ipmimon/providers/__init__.py \
     opnsense/scripts/ipmimon/providers/supermicro.py \
     opnsense/scripts/ipmimon/providers/supermicro_boards.xml \
     opnsense/service/conf/actions.d/actions_ipmimon.conf \
     opnsense/mvc/app/controllers/OPNsense/Ipmimon/Api/SnapshotController.php \
+    opnsense/mvc/app/controllers/OPNsense/Ipmimon/Api/FanController.php \
     opnsense/mvc/app/models/OPNsense/Ipmimon/ACL/ACL.xml \
     opnsense/www/js/widgets/Ipmimon.js \
     opnsense/www/js/widgets/Metadata/Ipmimon.xml \

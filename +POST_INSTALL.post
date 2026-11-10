@@ -1,2 +1,3 @@
 echo 'IPMI Monitor installed. Reconnect the web session, add the widget and grant Diagnostics: IPMI read-only as needed.'
+echo 'Grant Diagnostics: IPMI fan control separately to users allowed to change the BMC fan mode.'
 echo 'If /dev/ipmi0 is missing, configure the IPMI driver separately. No BMC settings were changed.'

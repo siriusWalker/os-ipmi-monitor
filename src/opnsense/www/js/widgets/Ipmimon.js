@@ -53,6 +53,8 @@ export default class Ipmimon extends BaseWidget {
         this.profileLoaded = false;
         this.inventory = null;
         this.locale = {};
+        this.fanModeEditing = false;
+        this.fanModeUpdating = false;
     }
 
     defaultLabel(name) {
@@ -604,6 +606,7 @@ export default class Ipmimon extends BaseWidget {
         this.config.widget = options;
         try { this.settings = await this.getWidgetConfig(); }
         catch (error) { this.config.widget = previous; throw error; }
+        this.fanModeEditing = false;
         this.render();
         this.nextReadingAt = 0;
         await this.onWidgetTick();
@@ -623,16 +626,68 @@ export default class Ipmimon extends BaseWidget {
 
     formatValue(row) {
         if (row.value === null || row.value === undefined) return 'na';
-        if (row.name === 'Fan Mode' && String(row.value).startsWith('0x03')) {
-            return 'PUE2';
-        }
         if (row.name === 'Fan Mode') {
             const mode = /^0x([0-9a-f]{2})\b/i.exec(String(row.value));
-            const labels = {0: 'Standard', 1: 'FullSpeed', 2: 'Optimal', 4: 'HeavyIO'};
-            if (mode) return labels[parseInt(mode[1], 16)] || mode[0];
+            if (mode) return this.fanModeChoices().find(choice => choice.code === mode[1].toLowerCase())?.label || mode[0];
         }
         const value = typeof row.value === 'number' ? new Intl.NumberFormat(undefined, {maximumFractionDigits: ['V','A'].includes(row.unit) ? 3 : 1}).format(row.value) : String(row.value);
         return value + (row.unit ? ' ' + row.unit : '');
+    }
+
+    fanModeChoices() {
+        return (this.profile?.fan_modes || []).filter(mode => mode &&
+            /^[a-z][a-z0-9_]{0,31}$/.test(mode.id) && /^0[0-4]$/.test(mode.code) &&
+            typeof mode.name === 'string' && mode.name.length > 0 && mode.name.length <= 80)
+            .map(mode => ({value:mode.id,code:mode.code,label:mode.name}));
+    }
+
+    fanModePicker(row, layout) {
+        const choices = this.fanModeChoices();
+        const current = /^0x([0-9a-f]{2})\b/i.exec(String(row.value || ''))?.[1].toLowerCase();
+        const picker = $('<div>').css({display:'flex',flexDirection:'column',gap:'4px',
+            flex:layout === 'cards' ? '0 0 auto' : '1 1 155px',width:layout === 'cards' ? '100%' : 'auto',
+            minWidth:layout === 'cards' ? 0 : 'min(100%, 155px)'});
+        const controls = $('<div>').css({display:'flex',alignItems:'center',justifyContent:'flex-end',
+            flexWrap:layout === 'cards' ? 'wrap' : 'nowrap',gap:'4px',width:'100%',minWidth:0});
+        const select = $('<select>').addClass('form-control').attr('aria-label',this.tr('fan_mode'))
+            .css({flex:layout === 'cards' ? '1 1 80px' : '1 1 0%',width:layout === 'cards' ? 'auto' : 0,
+                minWidth:layout === 'cards' ? 'min(100%, 60px)' : 0});
+        for (const choice of choices) select.append($('<option>').val(choice.value).text(choice.label));
+        select.val(choices.find(choice => choice.code === current)?.value || 'standard');
+        const iconButton = (title, icon, style) => $('<button>').attr({type:'button',title,'aria-label':title})
+            .addClass('btn btn-xs ' + style).css({flex:'0 0 26px',width:'26px',height:'26px',padding:0,
+                display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:'16px',lineHeight:1}).text(icon);
+        const apply = iconButton(this.tr('apply_fan_mode'),'✓','btn-primary');
+        const cancel = iconButton(this.tr('cancel_fan_mode'),'×','btn-default');
+        const message = $('<small>').css({display:'none'});
+        picker.on('click keydown', event => event.stopPropagation());
+        cancel.on('click', () => { this.fanModeEditing = false; this.render(); });
+        apply.on('click', async () => {
+            const selected = choices.find(choice => choice.value === select.val());
+            if (!selected || !window.confirm(this.tr('confirm_fan_mode_change') + ' ' + selected.label + '?')) return;
+            apply.prop('disabled',true);
+            cancel.prop('disabled',true);
+            this.fanModeUpdating = true;
+            message.text(this.tr('changing_fan_mode')).removeClass('text-danger').show();
+            try {
+                const result = await $.ajax({url:'/api/ipmimon/fan/set',type:'POST',
+                    data:JSON.stringify({mode:selected.value}),contentType:'application/json',dataType:'json',timeout:40000});
+                if (result?.status !== 'ok' || result.mode !== '0x' + selected.code.toUpperCase()) throw new Error('Fan mode change failed');
+                const live = this.latest?.rows?.find(reading => reading.name === 'Fan Mode');
+                if (live) live.value = result.mode;
+                this.fanModeEditing = false;
+                this.nextReadingAt = Date.now() + 2500;
+                this.render();
+            } catch (error) {
+                message.text(this.tr('fan_mode_change_failed')).addClass('text-danger').show();
+                apply.prop('disabled',false);
+                cancel.prop('disabled',false);
+            } finally {
+                this.fanModeUpdating = false;
+            }
+        });
+        picker.append(controls.append(select,apply,cancel),message);
+        return picker;
     }
 
     render() {
@@ -665,7 +720,7 @@ export default class Ipmimon extends BaseWidget {
             if (!members.length) continue;
             if (separated) container.append($('<div>').addClass('text-muted').css({fontSize: '11px', fontWeight: 600,
                 textTransform: 'uppercase', letterSpacing: '0.06em', margin: '12px 0 5px'}).text(this.tr('category_' + group.toLowerCase())));
-            const section = $('<div>').css(layout === 'cards' ? {display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 110px), 1fr))', gap: '8px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box'} : {});
+            const section = $('<div>').css(layout === 'cards' ? {display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 90px), 1fr))', gap: '8px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box'} : {});
             if (layout === 'cards') section.attr('data-ipmimon-grid', '1');
             for (const row of members) {
                 const label = String(labels[row.id] || this.defaultLabel(row.name)).slice(0, 80);
@@ -687,6 +742,23 @@ export default class Ipmimon extends BaseWidget {
                 }
                 item.append(name, value);
                 if (this.settings.show_status === '1') item.append($('<small>').text(this.statusLabel(row.status)).addClass('text-muted').css({textAlign: 'right'}));
+                const currentMode = /^0x([0-9a-f]{2})\b/i.exec(String(row.value || ''))?.[1].toLowerCase();
+                if (row.name === 'Fan Mode' && this.fanModeChoices().some(choice => choice.code === currentMode)) {
+                    if (this.fanModeEditing) {
+                        item.css({alignItems:layout === 'cards' ? 'stretch' : 'center',gap:'6px',
+                            flexWrap:layout === 'cards' ? 'nowrap' : 'wrap'});
+                        name.css({flex:'0 0 auto',maxWidth:'100%',
+                            whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'});
+                        item.empty().append(name, this.fanModePicker(row, layout));
+                    }
+                    else item.attr({role:'button',tabindex:0}).css({cursor:'pointer'})
+                        .on('click keydown', event => {
+                            if (event.type === 'keydown' && !['Enter',' '].includes(event.key)) return;
+                            event.preventDefault();
+                            this.fanModeEditing = true;
+                            this.render();
+                        });
+                }
                 section.append(item);
             }
             container.append(section);
@@ -722,7 +794,7 @@ export default class Ipmimon extends BaseWidget {
     }
 
     async onWidgetTick() {
-        if (this.busy) return;
+        if (this.busy || this.fanModeUpdating) return;
         const element = document.getElementById(this.contentId);
         if (!element) return;
         if (Date.now() < this.nextReadingAt) return;
@@ -734,7 +806,7 @@ export default class Ipmimon extends BaseWidget {
             const data = await this.ajaxCall('/api/ipmimon/snapshot/get');
             if (!Array.isArray(data.rows) || !Array.isArray(data.errors)) throw new Error('Invalid data');
             this.latest = data;
-            this.render();
+            if (!this.fanModeEditing) this.render();
         } catch (error) {
             this.latest = null;
             container.text(this.tr('na_reading_failed_access_denied_or_request_timed_out'));
