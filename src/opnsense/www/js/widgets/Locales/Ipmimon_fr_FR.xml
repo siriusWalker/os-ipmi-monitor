@@ -52,7 +52,8 @@
     <reading_ipmi>Lecture IPMI…</reading_ipmi>
     <na_reading_failed_access_denied_or_request_timed_out>na — lecture impossible, accès refusé ou délai dépassé.</na_reading_failed_access_denied_or_request_timed_out>
     <reading>Lecture</reading>
-    <refresh_every_10_s>actualisation 10 s</refresh_every_10_s>
+    <refresh_interval>Intervalle d’actualisation</refresh_interval>
+    <refresh_every>actualisation toutes les</refresh_every>
     <available>disponibles</available>
     <group_suffix> (groupe)</group_suffix>
     <maximum_32_groups>Maximum : 32 groupes.</maximum_32_groups>

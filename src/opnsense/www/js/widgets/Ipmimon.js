@@ -41,13 +41,14 @@ if (typeof MutationObserver !== 'undefined' && document.documentElement?.lang?.t
 export default class Ipmimon extends BaseWidget {
     constructor(config) {
         super(config);
-        this.tickTimeout = 10;
+        this.tickTimeout = 1;
         this.timeoutPeriod = 9000;
         this.retryLimit = 0;
         this.busy = false;
         this.configurable = true;
         this.latest = null;
         this.settings = {};
+        this.nextReadingAt = 0;
         this.profile = null;
         this.profileLoaded = false;
         this.inventory = null;
@@ -313,7 +314,7 @@ export default class Ipmimon extends BaseWidget {
             parent.prepend($('<div>').css({padding:'0 0 12px',fontWeight:600,overflowWrap:'anywhere'})
                 .text([systemName,boardName].filter(Boolean).join(' - ')));
         }
-        const presentation = section('display',['layout']);
+        const presentation = section('display',['layout','refresh_interval']);
         presentation.css({borderTop:0});
         const checkboxOption = (key,title,checkedValue) => {
             const original = $(document.getElementById(options[key].id));
@@ -524,6 +525,11 @@ export default class Ipmimon extends BaseWidget {
             layout: {title: 'presentation', type: 'select', options: [
                 {value: 'grouped', label: 'grouped_list'}, {value: 'compact', label: 'compact_list'},
                 {value: 'cards', label: 'tiles'}], default: 'grouped'},
+            refresh_interval: {title: 'refresh_interval', type: 'select', options: [
+                {value: '2', label: '2 s'}, {value: '5', label: '5 s'},
+                {value: '10', label: '10 s'}, {value: '20', label: '20 s'},
+                {value: '30', label: '30 s'}, {value: '60', label: '60 s'},
+                {value: '120', label: '120 s'}], default: '10'},
             cards_categories: {title: 'tiles_separate_categories', type: 'select', options: [
                 {value: '0', label: 'no_continuous_grid'}, {value: '1', label: 'yes_one_grid_per_category'}], default: '0'},
             hide_na: {title: 'unavailable_readings', type: 'select', options: [
@@ -557,7 +563,7 @@ export default class Ipmimon extends BaseWidget {
             if (!['sensor_choices','solid_tiles'].includes(key)) for (const choice of option.options || []) choice.label = this.tr(choice.label);
         }
         const ordered = {};
-        for (const key of ['layout', 'cards_categories', 'solid_tiles', 'identity_choices', 'show_identity_titles', 'sensor_choices',
+        for (const key of ['layout', 'refresh_interval', 'cards_categories', 'solid_tiles', 'identity_choices', 'show_identity_titles', 'sensor_choices',
             'hide_na', 'show_status', ...Object.keys(options)]) ordered[key] = options[key];
         this.prepareOptions(ordered);
         return ordered;
@@ -599,6 +605,8 @@ export default class Ipmimon extends BaseWidget {
         try { this.settings = await this.getWidgetConfig(); }
         catch (error) { this.config.widget = previous; throw error; }
         this.render();
+        this.nextReadingAt = 0;
+        await this.onWidgetTick();
     }
 
     category(row) {
@@ -686,7 +694,8 @@ export default class Ipmimon extends BaseWidget {
         if (!rows.length) container.append($('<div>').addClass('text-muted').text(this.tr('no_selected_or_available_readings')));
         const date = new Date(this.latest.timestamp);
         const stamp = Number.isNaN(date.getTime()) ? this.tr('time_unavailable') : date.toLocaleTimeString();
-        container.append($('<div>').addClass('text-muted').css({fontSize: '11px', marginTop: '10px'}).text(this.tr('reading') + ' ' + stamp + ' · ' + this.tr('refresh_every_10_s')));
+        container.append($('<div>').addClass('text-muted').css({fontSize: '11px', marginTop: '10px'}).text(
+            this.tr('reading') + ' ' + stamp + ' · ' + this.tr('refresh_every') + ' ' + (this.settings.refresh_interval || '10') + ' s'));
         for (const error of this.latest.errors || []) container.append($('<div>').addClass('text-muted').css({fontSize: '11px'}).text(this.backendMessage(error)));
         this.applyTileOccupancy();
     }
@@ -716,8 +725,11 @@ export default class Ipmimon extends BaseWidget {
         if (this.busy) return;
         const element = document.getElementById(this.contentId);
         if (!element) return;
+        if (Date.now() < this.nextReadingAt) return;
         const container = $(element);
         this.busy = true;
+        // OPNsense starts its timer once, so skip intermediate ticks for longer intervals.
+        this.nextReadingAt = Date.now() + Number(this.settings.refresh_interval || 10) * 1000;
         try {
             const data = await this.ajaxCall('/api/ipmimon/snapshot/get');
             if (!Array.isArray(data.rows) || !Array.isArray(data.errors)) throw new Error('Invalid data');
@@ -726,6 +738,7 @@ export default class Ipmimon extends BaseWidget {
         } catch (error) {
             this.latest = null;
             container.text(this.tr('na_reading_failed_access_denied_or_request_timed_out'));
+            this.nextReadingAt = Date.now() + 10000;
         } finally {
             this.busy = false;
         }
