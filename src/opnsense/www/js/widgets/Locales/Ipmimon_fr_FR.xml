@@ -1,0 +1,101 @@
+<translations>
+    <title>Moniteur IPMI</title>
+    <presentation>Présentation</presentation>
+    <grouped_list>Liste par catégorie</grouped_list>
+    <compact_list>Liste compacte</compact_list>
+    <tiles>Tuiles</tiles>
+    <tiles_separate_categories>Tuiles : séparer les catégories</tiles_separate_categories>
+    <no_continuous_grid>Non — grille continue</no_continuous_grid>
+    <yes_one_grid_per_category>Oui — une grille par catégorie</yes_one_grid_per_category>
+    <unavailable_readings>Mesures na</unavailable_readings>
+    <show>Afficher</show>
+    <hide>Masquer</hide>
+    <sensor_status>État des capteurs</sensor_status>
+    <on_hover_only>Au survol uniquement</on_hover_only>
+    <sensors_to_display>Capteurs à afficher</sensors_to_display>
+    <add_edit_or_remove_a_group>Ajouter, modifier ou supprimer un groupe</add_edit_or_remove_a_group>
+    <catalog>Catalogue</catalog>
+    <labels_for_selected_items>Libellés des éléments sélectionnés</labels_for_selected_items>
+    <displayed_fields_and_labels>Champs affichés et libellés</displayed_fields_and_labels>
+    <solid_tiles>Tuiles solides</solid_tiles>
+    <reading_display>Affichage des mesures</reading_display>
+    <custom_groups>Groupes personnalisés</custom_groups>
+    <sensors>Capteurs</sensors>
+    <display>Affichage</display>
+    <separate_categories>Séparer les catégories</separate_categories>
+    <solid>Solides</solid>
+    <show_na>Afficher &apos;na&apos;</show_na>
+    <readings>Mesures</readings>
+    <groups>Groupes</groups>
+    <fields>Champs</fields>
+    <category_temperatures>Températures</category_temperatures>
+    <category_fans>Ventilateurs</category_fans>
+    <category_control>Régulation</category_control>
+    <category_voltages>Tensions</category_voltages>
+    <category_others>Autres</category_others>
+    <select_sensors_or_groups_above>Sélectionnez des capteurs ou des groupes ci-dessus.</select_sensors_or_groups_above>
+    <name>Nom</name>
+    <category>Catégorie</category>
+    <source_unit>Unité des sources</source_unit>
+    <calculation>Calcul</calculation>
+    <mean>Moyenne</mean>
+    <median>Médiane</median>
+    <highest_value>Valeur la plus haute</highest_value>
+    <maximum>Maximum</maximum>
+    <source_sensors>Capteurs sources</source_sensors>
+    <remove_group>− Supprimer</remove_group>
+    <choose_sensors>Choisir les capteurs</choose_sensors>
+    <add_group>+ Ajouter un groupe</add_group>
+    <new_group>Nouveau groupe</new_group>
+    <no_selected_or_available_readings>Aucune mesure sélectionnée ou disponible.</no_selected_or_available_readings>
+    <time_unavailable>Date indisponible</time_unavailable>
+    <reading_ipmi>Lecture IPMI…</reading_ipmi>
+    <na_reading_failed_access_denied_or_request_timed_out>na — lecture impossible, accès refusé ou délai dépassé.</na_reading_failed_access_denied_or_request_timed_out>
+    <reading>Lecture</reading>
+    <refresh_every_10_s>actualisation 10 s</refresh_every_10_s>
+    <available>disponibles</available>
+    <group_suffix> (groupe)</group_suffix>
+    <maximum_32_groups>Maximum : 32 groupes.</maximum_32_groups>
+    <invalid_or_duplicate_group_identifier>Identifiant de groupe invalide ou dupliqué.</invalid_or_duplicate_group_identifier>
+    <each_group_needs_a_name_maximum_80_characters>Chaque groupe doit avoir un nom (80 caractères maximum).</each_group_needs_a_name_maximum_80_characters>
+    <invalid_category_or_calculation>Catégorie ou calcul invalide.</invalid_category_or_calculation>
+    <invalid_group_sources>Sources du groupe invalides.</invalid_group_sources>
+    <numeric_sensor_sources_only_nested_groups_are_not_allowed>Sources numériques uniquement, sans groupes imbriqués.</numeric_sensor_sources_only_nested_groups_are_not_allowed>
+    <a_group_cannot_mix_units>Un groupe ne peut pas mélanger des unités.</a_group_cannot_mix_units>
+    <invalid_group_configuration>Configuration des groupes invalide.</invalid_group_configuration>
+    <invalid_group_list>La liste des groupes est invalide.</invalid_group_list>
+    <some_readings_are_absent_or_invalid_na>Certaines mesures sont absentes ou invalides (na).</some_readings_are_absent_or_invalid_na>
+    <no_sdr_sensor_available>Aucun capteur SDR disponible.</no_sdr_sensor_available>
+    <ipmi_collector_unavailable>Collecteur IPMI indisponible</ipmi_collector_unavailable>
+    <collector_busy_or_lock_unavailable>Collecteur occupé ou verrou indisponible</collector_busy_or_lock_unavailable>
+    <command_unavailable>commande indisponible</command_unavailable>
+    <timed_out>délai dépassé</timed_out>
+    <fan_mode>Mode Ventilation</fan_mode>
+    <ipmi_access_unavailable>accès IPMI indisponible</ipmi_access_unavailable>
+    <hardware>Matériel</hardware>
+    <system>Système</system>
+    <motherboard>Carte mère</motherboard>
+    <processor>Processeur</processor>
+    <information_to_display>Informations à afficher</information_to_display>
+    <chassis>Châssis</chassis>
+    <board>Carte</board>
+    <product>Produit</product>
+    <manufacturer>Fabricant</manufacturer>
+    <model>Modèle</model>
+    <part_number>Référence</part_number>
+    <serial_number>N° de série</serial_number>
+    <version>Version</version>
+    <firmware>Firmware</firmware>
+    <ipmi_version>Version IPMI</ipmi_version>
+    <device_id>ID appareil</device_id>
+    <manufacturer_id>ID fabricant</manufacturer_id>
+    <product_id>ID produit</product_id>
+    <asset_tag>Étiquette d&apos;inventaire</asset_tag>
+    <type>Type</type>
+    <device>Périphérique</device>
+    <show_field_title>Afficher le titre</show_field_title>
+    <status_alert>alerte</status_alert>
+    <status_partial>partiel</status_partial>
+    <status_ok>ok</status_ok>
+    <status_na>na</status_na>
+</translations>

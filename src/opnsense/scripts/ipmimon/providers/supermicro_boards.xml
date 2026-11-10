@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<board-profiles>
+    <!-- Match any listed FRU/BMC identity. Patterns are case insensitive; * is allowed only at the end. -->
+    <!-- These suggestions never restrict the live SDR sensor enumeration. -->
+    <!-- A2SDi HLN4F variants: four DIMM slots and four fan headers; no assumed fan-zone wiring. -->
+    <board id="supermicro-a2sdi-4c-hln4f">
+        <match source="fru.board.product" pattern="A2SDi-4C-HLN4F" />
+        <match source="fru.board.product" pattern="MBD-A2SDi-4C-HLN4F" />
+        <match source="fru.product.name" pattern="A2SDi-4C-HLN4F" />
+        <match source="smbios.planar.product" pattern="A2SDi-4C-HLN4F" />
+        <match source="smbios.planar.product" pattern="MBD-A2SDi-4C-HLN4F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FANA" />
+        </sensors>
+        <groups>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+    <board id="supermicro-a2sdi-8cplus-hln4f">
+        <match source="fru.board.product" pattern="A2SDi-8C+-HLN4F" />
+        <match source="fru.board.product" pattern="MBD-A2SDi-8C+-HLN4F" />
+        <match source="fru.product.name" pattern="A2SDi-8C+-HLN4F" />
+        <match source="smbios.planar.product" pattern="A2SDi-8C+-HLN4F" />
+        <match source="smbios.planar.product" pattern="MBD-A2SDi-8C+-HLN4F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FANA" />
+        </sensors>
+        <groups>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+    <!-- A2SDi TP8F variants: four DIMM slots and four fan headers; no assumed fan-zone wiring. -->
+    <board id="supermicro-a2sdi-tp8f">
+        <match source="fru.board.product" pattern="A2SDi-TP8F" />
+        <match source="fru.product.name" pattern="A2SDi-TP8F" />
+        <match source="bmc.product_name" pattern="A2SDi-TP8F" />
+        <match source="smbios.planar.product" pattern="A2SDi-TP8F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="MB_10G Temp" />
+            <sensor pattern="FAN*" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="Fan Mode" />
+            <sensor pattern="PWM zone *" />
+        </sensors>
+        <groups>
+            <group id="group_fan0" name="GRP_FAN0" category="Fans" unit="RPM" method="mean">
+                <member pattern="FAN1" />
+                <member pattern="FAN2" />
+            </group>
+            <group id="group_fan1" name="GRP_FAN1" category="Fans" unit="RPM" method="mean">
+                <member pattern="FANA" />
+            </group>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+    <!-- X10SDV Mini-ITX: MNL-1726, p. 2-20. PCB 2.00 uses FAN4 as zone 2,
+         reported as FANA by IPMI; PCB 1.00 has only the first zone. -->
+    <board id="supermicro-x10sdv-8c-tln4f">
+        <match source="fru.board.product" pattern="X10SDV-8C-TLN4F" />
+        <match source="fru.board.product" pattern="MBD-X10SDV-8C-TLN4F" />
+        <match source="fru.product.name" pattern="X10SDV-8C-TLN4F" />
+        <match source="smbios.planar.product" pattern="X10SDV-8C-TLN4F" />
+        <match source="smbios.planar.product" pattern="MBD-X10SDV-8C-TLN4F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="PCH Temp" />
+            <sensor pattern="Memory Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FAN4" />
+            <sensor pattern="FANA" />
+        </sensors>
+        <groups>
+            <group id="group_fan0" name="GRP_FAN0" category="Fans" unit="RPM" method="mean">
+                <member pattern="FAN1" />
+                <member pattern="FAN2" />
+                <member pattern="FAN3" />
+            </group>
+            <group id="group_fan1" name="GRP_FAN1" category="Fans" unit="RPM" method="mean">
+                <member pattern="FANA" />
+            </group>
+        </groups>
+    </board>
+    <!-- More embedded Xeon D boards. Only live SDR readings become initial choices. -->
+    <board id="supermicro-x10sdv-7tp4f">
+        <match source="fru.board.product" pattern="X10SDV-7TP4F" />
+        <match source="fru.board.product" pattern="MBD-X10SDV-7TP4F" />
+        <match source="smbios.planar.product" pattern="X10SDV-7TP4F" />
+        <match source="smbios.planar.product" pattern="MBD-X10SDV-7TP4F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="PCH Temp" />
+            <sensor pattern="Memory Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FAN4" />
+            <sensor pattern="FANA" />
+            <sensor pattern="FANB" />
+        </sensors>
+        <groups>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+    <board id="supermicro-x10sdv-16c-tln4f">
+        <match source="fru.board.product" pattern="X10SDV-16C-TLN4F" />
+        <match source="fru.board.product" pattern="MBD-X10SDV-16C-TLN4F" />
+        <match source="smbios.planar.product" pattern="X10SDV-16C-TLN4F" />
+        <match source="smbios.planar.product" pattern="MBD-X10SDV-16C-TLN4F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="PCH Temp" />
+            <sensor pattern="Memory Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FAN4" />
+            <sensor pattern="FANA" />
+        </sensors>
+        <groups>
+            <group id="group_fan0" name="GRP_FAN0" category="Fans" unit="RPM" method="mean">
+                <member pattern="FAN1" />
+                <member pattern="FAN2" />
+                <member pattern="FAN3" />
+            </group>
+            <group id="group_fan1" name="GRP_FAN1" category="Fans" unit="RPM" method="mean">
+                <member pattern="FANA" />
+            </group>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+    <!-- X11SDV-TP8F: MNL-2007, p. 38: zone 1 = FAN1-4, zone 2 = FANA/B. -->
+    <board id="supermicro-x11sdv-4c-tp8f">
+        <match source="fru.board.product" pattern="X11SDV-4C-TP8F" />
+        <match source="fru.board.product" pattern="MBD-X11SDV-4C-TP8F" />
+        <match source="smbios.planar.product" pattern="X11SDV-4C-TP8F" />
+        <match source="smbios.planar.product" pattern="MBD-X11SDV-4C-TP8F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="PCH Temp" />
+            <sensor pattern="Memory Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FAN4" />
+            <sensor pattern="FANA" />
+            <sensor pattern="FANB" />
+        </sensors>
+        <groups>
+            <group id="group_fan0" name="GRP_FAN0" category="Fans" unit="RPM" method="mean">
+                <member pattern="FAN1" />
+                <member pattern="FAN2" />
+                <member pattern="FAN3" />
+                <member pattern="FAN4" />
+            </group>
+            <group id="group_fan1" name="GRP_FAN1" category="Fans" unit="RPM" method="mean">
+                <member pattern="FANA" />
+                <member pattern="FANB" />
+            </group>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+    <board id="supermicro-x11sdv-8c-tp8f">
+        <match source="fru.board.product" pattern="X11SDV-8C-TP8F" />
+        <match source="fru.board.product" pattern="MBD-X11SDV-8C-TP8F" />
+        <match source="smbios.planar.product" pattern="X11SDV-8C-TP8F" />
+        <match source="smbios.planar.product" pattern="MBD-X11SDV-8C-TP8F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="PCH Temp" />
+            <sensor pattern="Memory Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FAN4" />
+            <sensor pattern="FANA" />
+            <sensor pattern="FANB" />
+        </sensors>
+        <groups>
+            <group id="group_fan0" name="GRP_FAN0" category="Fans" unit="RPM" method="mean">
+                <member pattern="FAN1" />
+                <member pattern="FAN2" />
+                <member pattern="FAN3" />
+                <member pattern="FAN4" />
+            </group>
+            <group id="group_fan1" name="GRP_FAN1" category="Fans" unit="RPM" method="mean">
+                <member pattern="FANA" />
+                <member pattern="FANB" />
+            </group>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+    <board id="supermicro-x12sdv-4c-spt8f">
+        <match source="fru.board.product" pattern="X12SDV-4C-SPT8F" />
+        <match source="fru.board.product" pattern="MBD-X12SDV-4C-SPT8F" />
+        <match source="smbios.planar.product" pattern="X12SDV-4C-SPT8F" />
+        <match source="smbios.planar.product" pattern="MBD-X12SDV-4C-SPT8F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="PCH Temp" />
+            <sensor pattern="Memory Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FAN4" />
+            <sensor pattern="FANA" />
+            <sensor pattern="FANB" />
+        </sensors>
+        <groups>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+    <board id="supermicro-x12sdv-8c-spt4f">
+        <match source="fru.board.product" pattern="X12SDV-8C-SPT4F" />
+        <match source="fru.board.product" pattern="MBD-X12SDV-8C-SPT4F" />
+        <match source="smbios.planar.product" pattern="X12SDV-8C-SPT4F" />
+        <match source="smbios.planar.product" pattern="MBD-X12SDV-8C-SPT4F" />
+        <sensors>
+            <sensor pattern="CPU Temp" />
+            <sensor pattern="System Temp" />
+            <sensor pattern="Peripheral Temp" />
+            <sensor pattern="PCH Temp" />
+            <sensor pattern="Memory Temp" />
+            <sensor pattern="DIMM*" />
+            <sensor pattern="FAN1" />
+            <sensor pattern="FAN2" />
+            <sensor pattern="FAN3" />
+            <sensor pattern="FANA" />
+        </sensors>
+        <groups>
+            <group id="group_memory" name="GRP_MEMORY" category="Temperatures" unit="°C" method="mean">
+                <member pattern="DIMM*" />
+            </group>
+        </groups>
+    </board>
+</board-profiles>

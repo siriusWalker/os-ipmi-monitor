@@ -1,0 +1,110 @@
+<metadata>
+    <ipmimon>
+        <filename>Ipmimon.js</filename>
+        <endpoints>
+            <endpoint>/api/ipmimon/snapshot/get</endpoint>
+            <endpoint>/api/ipmimon/snapshot/inventory</endpoint>
+        </endpoints>
+        <translations>
+            <title>IPMI Monitor</title>
+            <presentation>Presentation</presentation>
+            <grouped_list>Grouped list</grouped_list>
+            <compact_list>Compact list</compact_list>
+            <tiles>Tiles</tiles>
+            <tiles_separate_categories>Tiles: separate categories</tiles_separate_categories>
+            <no_continuous_grid>No - continuous grid</no_continuous_grid>
+            <yes_one_grid_per_category>Yes - one grid per category</yes_one_grid_per_category>
+            <unavailable_readings>Unavailable readings</unavailable_readings>
+            <show>Show</show>
+            <hide>Hide</hide>
+            <sensor_status>Sensor status</sensor_status>
+            <on_hover_only>On hover only</on_hover_only>
+            <sensors_to_display>Sensors to display</sensors_to_display>
+            <add_edit_or_remove_a_group>Add, edit or remove a group</add_edit_or_remove_a_group>
+            <catalog>Catalog</catalog>
+            <labels_for_selected_items>Labels for selected items</labels_for_selected_items>
+            <displayed_fields_and_labels>Displayed fields and labels</displayed_fields_and_labels>
+            <solid_tiles>Solid tiles</solid_tiles>
+            <reading_display>Reading display</reading_display>
+            <custom_groups>Custom groups</custom_groups>
+            <sensors>Sensors</sensors>
+            <display>Display</display>
+            <separate_categories>Separate categories</separate_categories>
+            <solid>Solid</solid>
+            <show_na>Show &apos;na&apos;</show_na>
+            <readings>Readings</readings>
+            <groups>Groups</groups>
+            <fields>Fields</fields>
+            <category_temperatures>Temperatures</category_temperatures>
+            <category_fans>Fans</category_fans>
+            <category_control>Fan control</category_control>
+            <category_voltages>Voltages</category_voltages>
+            <category_others>Other</category_others>
+            <select_sensors_or_groups_above>Select sensors or groups above.</select_sensors_or_groups_above>
+            <name>Name</name>
+            <category>Category</category>
+            <source_unit>Source unit</source_unit>
+            <calculation>Calculation</calculation>
+            <mean>Mean</mean>
+            <median>Median</median>
+            <highest_value>Highest value</highest_value>
+            <maximum>Maximum</maximum>
+            <source_sensors>Source sensors</source_sensors>
+            <remove_group>- Remove</remove_group>
+            <choose_sensors>Choose sensors</choose_sensors>
+            <add_group>+ Add group</add_group>
+            <new_group>New group</new_group>
+            <no_selected_or_available_readings>No selected or available readings.</no_selected_or_available_readings>
+            <time_unavailable>Time unavailable</time_unavailable>
+            <reading_ipmi>Reading IPMI…</reading_ipmi>
+            <na_reading_failed_access_denied_or_request_timed_out>na - reading failed, access denied or request timed out.</na_reading_failed_access_denied_or_request_timed_out>
+            <reading>Reading</reading>
+            <refresh_every_10_s>refresh every 10 s</refresh_every_10_s>
+            <available>available</available>
+            <group_suffix> (group)</group_suffix>
+            <maximum_32_groups>Maximum: 32 groups.</maximum_32_groups>
+            <invalid_or_duplicate_group_identifier>Invalid or duplicate group identifier.</invalid_or_duplicate_group_identifier>
+            <each_group_needs_a_name_maximum_80_characters>Each group needs a name (maximum 80 characters).</each_group_needs_a_name_maximum_80_characters>
+            <invalid_category_or_calculation>Invalid category or calculation.</invalid_category_or_calculation>
+            <invalid_group_sources>Invalid group sources.</invalid_group_sources>
+            <numeric_sensor_sources_only_nested_groups_are_not_allowed>Numeric sensor sources only; nested groups are not allowed.</numeric_sensor_sources_only_nested_groups_are_not_allowed>
+            <a_group_cannot_mix_units>A group cannot mix units.</a_group_cannot_mix_units>
+            <invalid_group_configuration>Invalid group configuration.</invalid_group_configuration>
+            <invalid_group_list>Invalid group list.</invalid_group_list>
+            <some_readings_are_absent_or_invalid_na>Some readings are absent or invalid (na).</some_readings_are_absent_or_invalid_na>
+            <no_sdr_sensor_available>No SDR sensor available.</no_sdr_sensor_available>
+            <ipmi_collector_unavailable>IPMI collector unavailable</ipmi_collector_unavailable>
+            <collector_busy_or_lock_unavailable>Collector busy or lock unavailable</collector_busy_or_lock_unavailable>
+            <command_unavailable>command unavailable</command_unavailable>
+            <timed_out>timed out</timed_out>
+            <fan_mode>Fan Mode</fan_mode>
+            <ipmi_access_unavailable>IPMI access unavailable</ipmi_access_unavailable>
+            <hardware>Hardware</hardware>
+            <system>System</system>
+            <motherboard>Motherboard</motherboard>
+            <processor>Processor</processor>
+            <information_to_display>Information to display</information_to_display>
+            <chassis>Chassis</chassis>
+            <board>Board</board>
+            <product>Product</product>
+            <manufacturer>Manufacturer</manufacturer>
+            <model>Model</model>
+            <part_number>Part number</part_number>
+            <serial_number>Serial number</serial_number>
+            <version>Version</version>
+            <firmware>Firmware</firmware>
+            <ipmi_version>IPMI version</ipmi_version>
+            <device_id>Device ID</device_id>
+            <manufacturer_id>Manufacturer ID</manufacturer_id>
+            <product_id>Product ID</product_id>
+            <asset_tag>Asset tag</asset_tag>
+            <type>Type</type>
+            <device>Device</device>
+            <show_field_title>Show field title</show_field_title>
+            <status_alert>alert</status_alert>
+            <status_partial>partial</status_partial>
+            <status_ok>ok</status_ok>
+            <status_na>na</status_na>
+        </translations>
+    </ipmimon>
+</metadata>

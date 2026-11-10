@@ -1,0 +1,13 @@
+dist/
+work/
+__pycache__/
+*.pyc
+*.pkg
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+.env.*
+*.ovpn
+.DS_Store

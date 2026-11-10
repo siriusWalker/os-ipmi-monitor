@@ -1,0 +1,2 @@
+if [ -x /usr/local/etc/rc.d/configd ]; then /usr/local/etc/rc.d/configd restart; fi
+echo 'IPMI Monitor removed. Saved dashboard preferences and IPMI driver tunables were preserved.'

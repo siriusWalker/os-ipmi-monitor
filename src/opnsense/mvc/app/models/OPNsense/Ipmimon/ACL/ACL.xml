@@ -1,0 +1,9 @@
+<acl>
+    <page-ipmimon-readonly>
+        <name>Diagnostics: IPMI read-only</name>
+        <patterns>
+            <pattern>api/ipmimon/snapshot/get</pattern>
+            <pattern>api/ipmimon/snapshot/inventory</pattern>
+        </patterns>
+    </page-ipmimon-readonly>
+</acl>

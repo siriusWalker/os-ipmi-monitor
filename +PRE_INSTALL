@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+[ -x /usr/local/sbin/opnsense-version ] || { echo 'IPMI Monitor requires OPNsense' >&2; exit 1; }
+for required in \
+    /usr/local/bin/python3 \
+    /usr/local/bin/ipmitool \
+    /usr/local/opnsense/www/js/widgets/BaseWidget.js \
+    /usr/local/opnsense/mvc/app/controllers/OPNsense/Base/ApiControllerBase.php; do
+    [ -f "$required" ] || { echo "Missing prerequisite: $required" >&2; exit 1; }
+done
+for target in \
+    opnsense/scripts/ipmimon/collector.py \
+    opnsense/scripts/ipmimon/providers/__init__.py \
+    opnsense/scripts/ipmimon/providers/supermicro.py \
+    opnsense/scripts/ipmimon/providers/supermicro_boards.xml \
+    opnsense/service/conf/actions.d/actions_ipmimon.conf \
+    opnsense/mvc/app/controllers/OPNsense/Ipmimon/Api/SnapshotController.php \
+    opnsense/mvc/app/models/OPNsense/Ipmimon/ACL/ACL.xml \
+    opnsense/www/js/widgets/Ipmimon.js \
+    opnsense/www/js/widgets/Metadata/Ipmimon.xml \
+    opnsense/www/js/widgets/Locales/Ipmimon_en_US.xml \
+    opnsense/www/js/widgets/Locales/Ipmimon_fr_FR.xml; do
+    path="/usr/local/$target"
+    if [ -e "$path" ] || [ -L "$path" ]; then
+        [ ! -L "$path" ] || { echo "Symlink refused: $path" >&2; exit 1; }
+        owner=$(/usr/local/sbin/pkg which -q "$path" 2>/dev/null || true)
+        case "$owner" in
+            os-ipmi-monitor-*) ;;
+            *) echo "Existing file not owned by os-ipmi-monitor: $path. Use scripts/legacy.py first." >&2; exit 1 ;;
+        esac
+    fi
+done
