@@ -8,17 +8,22 @@ os-ipmi-monitor displays hardware readings and system information directly on th
 
 ## Screenshots
 
-| Dashboard widget | Configuration |
-| --- | --- |
-| ![IPMI Monitor widget showing temperatures, fan speeds, fan mode, and PWM zones](docs/images/os-ipmi-monitor-widget1.png) | ![IPMI Monitor options for display, hardware fields, sensors, groups, and labels](docs/images/os-ipmi-monitor-config.png) |
+| List | Compact | Tiles |
+| --- | --- | --- |
+| ![IPMI Monitor list view](docs/images/os-ipmi-monitor-list.png) | ![IPMI Monitor compact view](docs/images/os-ipmi-monitor-compact.png) | ![IPMI Monitor tiles view](docs/images/os-ipmi-monitor-tiles.png) |
+
+Configuration:
+
+![IPMI Monitor options for display, hardware fields, sensors, groups, and labels](docs/images/os-ipmi-monitor-config.png)
 
 The screenshots show an A2SDi-TP8F test system. Available sensors and values depend on the motherboard, BMC, connected fans, and installed hardware.
 
 ## Features
 
 - Automatic discovery of the local BMC's SDR readings; a board profile never hides newly discovered sensors.
-- Configurable tile, grouped-list, and compact-list presentations, with optional category separation and sensor status display.
-- Sensor selection, custom labels, and calculated groups using mean, median, or maximum values. Group suggestions are available for selected Supermicro boards.
+- Configurable list, compact, and tile presentations, with optional category separation and sensor status display.
+- Sensor selection and customizable display labels: for example, show `CPU Temp` as `CPU` without changing the sensor name reported by the BMC.
+- Calculated groups: combine compatible sensor readings into one displayed value using their mean, median, or maximum. For example, a fan group can summarize several fan speeds, while a memory group can summarize DIMM temperatures. Users can edit groups; selected Supermicro board profiles provide initial suggestions.
 - Optional hardware identity fields from FRU, BMC, SMBIOS, and the FreeBSD processor model. These fields are not selected for display by default.
 - Read-only Supermicro OEM readings for fan mode and two PWM zones. Support for other vendors' OEM readings is not implemented.
 - English and French interface catalogs selected from the OPNsense dashboard language. Full integration with the OPNsense translation workflow is still pending.
